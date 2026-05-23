@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Name="ARKHE OS v∞.Ω.∇+++"
+           Language="1033"
+           Version="∞.Ω.584.0"
+           Manufacturer="Arkhe Foundation (ORCID:0009-0005-2697-4668)"
+           UpgradeCode="12345678-1234-1234-1234-123456789ABC">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64"
+             Description="ARKHE OS Constitutional Runtime — Windows Native CLI"
+             Comments="2% Royalties Catedral → ORCID 0009-0005-2697-4668" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="CoreFeature" Title="ARKHE CLI" Level="1">
+      <ComponentGroupRef Id="ArkheComponents" />
+      <ComponentGroupRef Id="RegistryComponents" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="Arkhe">
+          <Directory Id="SubstratosDir" Name="substratos" />
+          <Directory Id="LogsDir" Name="logs" />
+          <Directory Id="ConfigDir" Name="config" />
+          <Directory Id="CacheDir" Name="cache" />
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ArkheMenuDir" Name="ARKHE OS" />
+      </Directory>
+    </Directory>
+
+    <!-- Componentes gerados automaticamente via heat -->
+    <ComponentGroup Id="ArkheComponents" Source="heat/ArkheComponents.wxs" />
+
+    <!-- Registro do Windows -->
+    <ComponentGroup Id="RegistryComponents" Directory="TARGETDIR">
+      <Component Id="ArkheRegistry" Guid="87654321-4321-4321-4321-210987654321">
+        <RegistryKey Root="HKLM" Key="Software\ArkheOS">
+          <RegistryValue Name="Version" Value="∞.Ω.584.0" Type="string" />
+          <RegistryValue Name="Substrates" Value="345" Type="integer" />
+          <RegistryValue Name="Architect" Value="0009-0005-2697-4668" Type="string" />
+          <RegistryValue Name="Royalties" Value="2%" Type="string" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+
+    <!-- Atalho no menu Iniciar -->
+    <DirectoryRef Id="ArkheMenuDir">
+      <Component Id="ArkheShortcut" Guid="87654321-4321-4321-4321-210987654322">
+        <Shortcut Id="ArkheCLIShortcut" Name="ARKHE OS CLI" Target="[INSTALLFOLDER]arkhe.exe"
+                  WorkingDirectory="INSTALLFOLDER" Icon="ArkheIcon.ico" />
+        <RegistryValue Root="HKCU" Key="Software\ArkheOS\Shortcuts" Name="CLI" Type="string" Value="1" />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Adiciona ao PATH -->
+    <Environment Id="ArkhePath" Name="PATH" Value="[INSTALLFOLDER]" Permanent="no" Part="last" Action="set" System="yes" />
+  </Product>
+</Wix>
