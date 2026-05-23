@@ -10,7 +10,7 @@ members = [
     "crates/userop-kit-ts",
     "crates/aetherweave",
     "crates/aetherweave-ts",
-    "crates/aetherweave-server",
+    "crates/aetherweave-server", "crates/arkhe-cli",
 ]
 resolver = "3"
 
