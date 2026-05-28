@@ -62,3 +62,13 @@
   name: "ZK Remote LLM Access Layer"
   category: "security"
   links: ["225", "230", "840"]
+
+"927":
+  name: "PERMAWEB-BRIDGE"
+  category: "cognition"
+  links: ["912", "905", "920", "923", "926"]
+
+"929":
+  name: "ARKHE-AS-ANDROID-OS"
+  category: "hardware"
+  links: ["920", "921", "922", "923", "924", "925", "926", "927", "928"]
