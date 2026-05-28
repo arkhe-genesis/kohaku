@@ -58,3 +58,8 @@
   name: "ZK Remote LLM Access Layer"
   category: "security"
   links: ["225", "230", "840"]
+
+"927":
+  name: "PERMAWEB-BRIDGE"
+  category: "cognition"
+  links: ["912", "905", "920", "923", "926"]
