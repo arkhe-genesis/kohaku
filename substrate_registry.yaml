@@ -72,3 +72,7 @@
   name: "ARKHE-AS-ANDROID-OS"
   category: "hardware"
   links: ["920", "921", "922", "923", "924", "925", "926", "927", "928"]
+"996.1":
+  name: "ARKHE-ONCHAIN (Octra Bridge)"
+  category: "blockchain"
+  links: ["840", "923", "954", "965", "972", "989.x", "989.y", "989.z", "996"]
