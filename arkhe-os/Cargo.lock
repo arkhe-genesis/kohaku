@@ -39,7 +39,15 @@ name = "checkpoint"
 version = "0.1.0"
 
 [[package]]
+name = "ipfs"
+version = "0.1.0"
+
+[[package]]
 name = "nostr"
+version = "0.1.0"
+
+[[package]]
+name = "package"
 version = "0.1.0"
 
 [[package]]
@@ -48,4 +56,8 @@ version = "0.1.0"
 
 [[package]]
 name = "pqc"
+version = "0.1.0"
+
+[[package]]
+name = "tor"
 version = "0.1.0"

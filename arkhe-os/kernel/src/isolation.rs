@@ -10,6 +10,6 @@ pub fn create_domain() -> usize {
     0
 }
 
-pub fn destroy_domain(domain_id: usize) {
+pub fn destroy_domain(_domain_id: usize) {
     // Clean up domain
 }

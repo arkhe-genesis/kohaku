@@ -11,7 +11,7 @@ members = [
     "libs/nostr",
     "tools/arkhe-sh",
     "tools/pkg",
-    "tools/checkpoint",
+    "tools/checkpoint", "servers/package", "libs/ipfs", "libs/tor",
 ]
 resolver = "2"
 

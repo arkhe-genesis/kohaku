@@ -1,18 +1,19 @@
 #![no_std]
 #![no_main]
 
-mod memory;
-mod scheduler;
-mod syscalls;
-mod ipc;
-mod isolation;
-mod temporal;
+pub mod memory;
+pub mod scheduler;
+pub mod syscalls;
+pub mod ipc;
+pub mod isolation;
+pub mod temporal;
+pub mod axiarchy;
 
 use core::panic::PanicInfo;
 
 // Entry point from bootloader
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+pub extern "C" fn kmain() -> ! {
     // 1. Initialize Memory Manager
     memory::init();
 

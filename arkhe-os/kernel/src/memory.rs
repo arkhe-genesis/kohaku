@@ -12,10 +12,10 @@ pub fn allocate_page() -> usize {
     0
 }
 
-pub fn map_page(virtual_addr: usize, physical_addr: usize) {
+pub fn map_page(_virtual_addr: usize, _physical_addr: usize) {
     // Map virtual to physical
 }
 
-pub fn anchor_page(virtual_addr: usize) {
+pub fn anchor_page(_virtual_addr: usize) {
     // Anchor page to TemporalChain (Syscall 0x923)
 }

@@ -1,14 +1,14 @@
-// ARKHE OS - Inter-Process Communication (IPC)
+// ARKHE OS - IPC
 // Substrato 996: ARKHE-OS
 
 pub fn init() {
-    // Initialize IPC channels with Kyber-1024 encryption
+    // Initialize IPC with Kyber-1024 channels
 }
 
-pub fn send_message(target_task_id: usize, msg: &[u8]) {
-    // Encrypt message using Kyber-1024 and send to target task
+pub fn send_message(_target_task_id: usize, _msg: &[u8]) {
+    // Send encrypted message
 }
 
 pub fn receive_message() {
-    // Receive message and decrypt
+    // Receive and decrypt message
 }
