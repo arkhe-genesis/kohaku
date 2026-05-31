@@ -1,0 +1,11 @@
+[package]
+name = "arkhe-os-kernel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Dependencies for no_std (built-in, no need to specify core)
+
+[[bin]]
+name = "arkhe-os-kernel"
+path = "src/main.rs"
