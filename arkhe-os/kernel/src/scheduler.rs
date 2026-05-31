@@ -18,3 +18,8 @@ pub fn start() {
 pub fn schedule() {
     // Pick next task, prioritize higher Theosis score
 }
+
+pub fn get_theosis(_pid: u32) -> usize {
+    // Stub
+    0
+}

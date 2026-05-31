@@ -22,10 +22,10 @@ kernel:
 	cd $(KERNEL_DIR) && cargo check
 
 servers:
-	cargo check --manifest-path Cargo.toml -p arkhe-vfs -p arkhe-net -p arkhe-passport -p arkhe-orchestrator -p arkhe-bindu
+	cargo check --manifest-path Cargo.toml -p arkhe-vfs -p arkhe-net -p package -p arkhe-passport -p arkhe-orchestrator -p arkhe-bindu
 
 libs:
-	cargo check --manifest-path Cargo.toml -p arklib -p pqc -p nostr
+	cargo check --manifest-path Cargo.toml -p arklib -p pqc -p nostr -p ipfs -p tor
 
 tools:
 	cargo check --manifest-path Cargo.toml -p arkhe-sh -p pkg -p checkpoint
