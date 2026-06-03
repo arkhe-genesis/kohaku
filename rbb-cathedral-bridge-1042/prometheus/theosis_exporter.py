@@ -34,6 +34,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 import urllib.request
 import urllib.error
+import requests
 
 
 @dataclass
@@ -72,11 +73,13 @@ class TheosisCollector:
     """Coletor de métricas Catedral"""
 
     def __init__(self, rbb_rpc: str, bridge_contract: str,
-                 permissionamento_contract: str, update_interval: int = 15):
+                 permissionamento_contract: str, update_interval: int = 15,
+                 wormgraph_url: str = None):
         self.rbb_rpc = rbb_rpc
         self.bridge_contract = bridge_contract
         self.permissionamento_contract = permissionamento_contract
         self.update_interval = update_interval
+        self.wormgraph_url = wormgraph_url
 
         self.theosis = TheosisMetrics()
         self.bridge = BridgeMetrics()
@@ -135,14 +138,29 @@ class TheosisCollector:
 
     def _update_theosis(self):
         """Atualiza métricas de Theosis"""
-        # Em produção, consultaria contrato Bridge ou API Catedral
-        # Simulação baseada em funções determinísticas
         now = time.time()
         seed = int(now / self.update_interval)
-
         import random
-        random.seed(seed)
 
+        if self.wormgraph_url:
+            try:
+                response = requests.get(self.wormgraph_url, timeout=5)
+                if response.status_code == 200:
+                    data = response.json()
+                    self.theosis.level = data.get("level", 0.0)
+                    self.theosis.entropy = data.get("entropy", 0.0)
+                    self.theosis.circularity = data.get("circularity", 0.0)
+                    self.theosis.resilience = data.get("resilience", 0.0)
+                    self.theosis.timestamp = now
+                    self.theosis.epoch = seed
+                    self.theosis.substrate_seal = data.get("substrate_seal", "")
+                    return
+            except Exception as e:
+                print(f"⚠️ Erro ao consultar WormGraph 5.0 ({self.wormgraph_url}): {e}")
+                print("⚠️ Usando fallback simulado.")
+
+        # Fallback (Simulação baseada em funções determinísticas)
+        random.seed(seed)
         self.theosis.level = round(0.3 + random.random() * 0.4, 4)
         self.theosis.entropy = round(0.4 + random.random() * 0.3, 4)
         self.theosis.circularity = round(random.random() * 0.02, 6)
@@ -151,8 +169,8 @@ class TheosisCollector:
         self.theosis.epoch = seed
 
         # Substrate seal determinístico
-        data = f"theosis:{seed}:{self.theosis.level}"
-        self.theosis.substrate_seal = "0x" + hashlib.sha3_256(data.encode()).hexdigest()
+        hash_data = f"theosis:{seed}:{self.theosis.level}"
+        self.theosis.substrate_seal = "0x" + hashlib.sha3_256(hash_data.encode()).hexdigest()
 
     def _update_bridge(self):
         """Atualiza métricas da Bridge"""
@@ -294,6 +312,7 @@ def main():
     parser.add_argument("--bridge-contract", default="0x0000000000000000000000000000000000010420")
     parser.add_argument("--permissionamento-contract", default="0x0000000000000000000000000000000000010421")
     parser.add_argument("--interval", type=int, default=15, help="Intervalo de coleta (s)")
+    parser.add_argument("--wormgraph-url", type=str, default=None, help="Endpoint WormGraph 5.0 / zkAGI (ex: http://localhost:9230/api/theosis)")
     args = parser.parse_args()
 
     print("🏛️  Theosis Tracker - Substrato 1042")
@@ -307,7 +326,8 @@ def main():
         rbb_rpc=args.rbb_rpc,
         bridge_contract=args.bridge_contract,
         permissionamento_contract=args.permissionamento_contract,
-        update_interval=args.interval
+        update_interval=args.interval,
+        wormgraph_url=args.wormgraph_url
     )
     collector.start()
 

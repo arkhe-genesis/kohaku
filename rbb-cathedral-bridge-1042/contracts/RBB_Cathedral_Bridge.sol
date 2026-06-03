@@ -62,7 +62,7 @@ contract RBB_Cathedral_Bridge is ReentrancyGuard, AccessControl {
     mapping(bytes32 => Anchor) public anchors;
     mapping(bytes32 => CrossChainMessage) public messages;
     mapping(address => uint256) public lockedBalances;
-    mapping(address => uint256) public mintedBalances;
+    address public cathedralToken;
     mapping(uint256 => TheosisSnapshot) public theosisHistory;
     mapping(bytes32 => bool) public processedMessages;
 
@@ -76,6 +76,7 @@ contract RBB_Cathedral_Bridge is ReentrancyGuard, AccessControl {
     uint256 public anchorInterval = 300; // ~20 minutos (300 blocos @ 4s)
     uint256 public minTheosisLevel = 100; // Threshold mínimo
     uint256 public bridgeFee = 0.001 ether;
+    address public plonkVerifier;
 
     // Events
     event AnchorCreated(
@@ -245,10 +246,16 @@ contract RBB_Cathedral_Bridge is ReentrancyGuard, AccessControl {
         uint256 _amount,
         bytes calldata _payload,
         uint256 _sourceChainId,
-        bytes calldata _signature
+        bytes calldata _signature,
+        bytes calldata _zkProof
     ) external onlyRole(BRIDGE_OPERATOR) nonReentrant {
         require(!processedMessages[_messageId], "Bridge: mensagem já processada");
         require(_sourceChainId == CATHEDRAL_CHAIN_ID, "Bridge: source inválida");
+
+        if (plonkVerifier != address(0) && _zkProof.length > 0) {
+            (bool success, ) = plonkVerifier.staticcall(_zkProof);
+            require(success, "Bridge: ZK Proof invalida");
+        }
 
         // Verificar assinatura do operador Catedral
         bytes32 messageHash = keccak256(abi.encodePacked(
@@ -263,8 +270,11 @@ contract RBB_Cathedral_Bridge is ReentrancyGuard, AccessControl {
         address signer = ethSignedHash.recover(_signature);
         require(hasRole(BRIDGE_OPERATOR, signer), "Bridge: assinatura inválida");
 
-        // Mint tokens (simplificado - em produção usar contract de token)
-        mintedBalances[_recipient] += _amount;
+        // Mint tokens
+        if (cathedralToken != address(0)) {
+            (bool mintSuccess, ) = cathedralToken.call(abi.encodeWithSignature("mint(address,uint256)", _recipient, _amount));
+            require(mintSuccess, "Bridge: mint falhou");
+        }
         processedMessages[_messageId] = true;
 
         emit MessageExecuted(_messageId, msg.sender, true);
@@ -332,6 +342,14 @@ contract RBB_Cathedral_Bridge is ReentrancyGuard, AccessControl {
 
     function setMinTheosisLevel(uint256 _level) external onlyRole(DEFAULT_ADMIN_ROLE) {
         minTheosisLevel = _level;
+    }
+
+    function setPlonkVerifier(address _verifier) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        plonkVerifier = _verifier;
+    }
+
+    function setCathedralToken(address _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        cathedralToken = _token;
     }
 
     function withdrawFees() external onlyRole(DEFAULT_ADMIN_ROLE) {

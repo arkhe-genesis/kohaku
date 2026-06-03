@@ -40,6 +40,7 @@ class CathedralConfig:
     version: str = "1.0.0"
     rbb_rpc_url: str = "http://localhost:8545"
     cathedral_api_url: str = "http://localhost:9230"
+    ollama_api_url: str = "http://localhost:11434"
     bridge_contract: str = BRIDGE_CONTRACT_ADDRESS
     permissionamento_contract: str = PERMISSIONAMENTO_ADDRESS
     orcid: str = ""
@@ -286,6 +287,37 @@ class CathedralAdapter:
             print(f"   Role: {kwargs.get('role', 'ADMIN')}")
             print(f"   ORCID Hash: {hashlib.sha3_256(self.config.orcid.encode()).hexdigest()[:16]}")
 
+    def ask(self, question: str):
+        """Consulta o modelo zkAGI via Ollama"""
+        print(f"\n🤖 Consultando Oráculo Catedral (zkAGI)...")
+        print(f"   Pergunta: {question}\n")
+
+        url = f"{self.config.ollama_api_url}/api/generate"
+        payload = {
+            "model": "cathedral-zkagi",
+            "prompt": question,
+            "stream": False
+        }
+
+        import urllib.request
+        import json
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as response:
+                result = json.loads(response.read())
+                print(f"🔮 Resposta:\n{result.get('response', 'Nenhuma resposta gerada.')}\n")
+        except urllib.error.URLError as e:
+            print(f"❌ Erro de conexão com Ollama em {self.config.ollama_api_url}: {e}")
+            print("   Dica: Certifique-se de que o Ollama está rodando e o modelo 'cathedral-zkagi' foi construído:")
+            print("   $ ollama create cathedral-zkagi -f rbb-cathedral-bridge-1042/adapter/Modelfile")
+        except Exception as e:
+            print(f"❌ Erro ao consultar o modelo: {e}")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -323,6 +355,11 @@ def main():
     perm_parser.add_argument("--account", help="Endereço Ethereum")
     perm_parser.add_argument("--role", default="ADMIN", help="Role da conta")
 
+    # ask
+    ask_parser = subparsers.add_parser("ask", help="Faz uma pergunta ao Oráculo Catedral (zkAGI)")
+    ask_parser.add_argument("question", help="Pergunta a ser feita")
+    ask_parser.add_argument("--ollama-url", help="URL do servidor Ollama (opcional)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -349,6 +386,10 @@ def main():
             account=args.account,
             role=args.role
         )
+    elif args.command == "ask":
+        if args.ollama_url:
+            adapter.config.ollama_api_url = args.ollama_url
+        adapter.ask(args.question)
 
 
 if __name__ == "__main__":
