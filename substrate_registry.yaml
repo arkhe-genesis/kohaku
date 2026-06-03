@@ -85,3 +85,11 @@
   name: "HERMES-CATHEDRAL BRIDGE"
   category: "cognition"
   links: ["989.y.5", "968", "972", "923", "970", "989.y.6.1"]
+
+  - id: "1028"
+    name: "GRAM-ASSURANCE-BRIDGE"
+    category: "cognition"
+    status: "active"
+    path: "substrates/1028-GRAM-ASSURANCE-BRIDGE/gram_assurance_bridge_1028.py"
+    language: "python"
+    description: "Ponte entre GRAM e Safety Case GSN."
