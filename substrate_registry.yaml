@@ -85,6 +85,10 @@
   name: "HERMES-CATHEDRAL BRIDGE"
   category: "cognition"
   links: ["989.y.5", "968", "972", "923", "970", "989.y.6.1"]
+"1047":
+  name: "TWIN-WALLET"
+  category: "security"
+  links: ["923", "954", "989.x", "972", "1039", "1042.4", "1016"]
 
   - id: "1028"
     name: "GRAM-ASSURANCE-BRIDGE"
