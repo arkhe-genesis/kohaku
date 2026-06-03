@@ -81,3 +81,7 @@
   name: "MUTATION-ENGINE-V2"
   category: "cognition"
   links: []
+"1040":
+  name: "HERMES-CATHEDRAL BRIDGE"
+  category: "cognition"
+  links: ["989.y.5", "968", "972", "923", "970", "989.y.6.1"]
