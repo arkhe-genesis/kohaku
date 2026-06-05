@@ -1,2 +1,3 @@
 #!/bin/bash
-make test
+pytest tests/
+cd tools/cil && cargo test
