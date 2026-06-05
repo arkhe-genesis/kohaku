@@ -24,5 +24,8 @@
     "tsx": "^4.21.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5"
   }
 }

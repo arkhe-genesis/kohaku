@@ -1,0 +1,4 @@
+1,1,0,main.out
+2,-1,0,main.operation_id
+3,-1,0,main.vault_id
+4,-1,0,main.merkle_root
